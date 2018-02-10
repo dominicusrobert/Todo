@@ -1,6 +1,7 @@
 # TODO App (Back-end)
 
 Web application for record and track your todo list (API)
+You also can filter todo list by priority
 
 #
 #
@@ -10,6 +11,19 @@ Todo list application using :
 1. OAuth (To get data from Facebook token)
 2. JSON Web Token
 3. Mongo DB and Mongoose ODM 
+```
+
+#
+#
+
+## Models
+
+```diff
+Collection : User 
+Attribute  : name, email, [todo_id]
+
+Collection : Todo 
+Attribute  : name, priority_level, difficulty_level, deadline, status
 ```
 
 #
@@ -28,16 +42,19 @@ Todo list application using :
 ### Todo Routes
 | Route | HTTP | Description | Request | Response |
 |-------|------|-------------|---------|----------|
-|`/todo` | POST | Create a todo | Headers : JWT, Body : todo data | response_code |
-|`/todo` | GET | Get user todo (response : JWT) | Headers : JWT, Params : todo_id | todo_data |
-|`/todo` | PUT | Edit todo data | Headers : JWT, Body : user_data | new_todo_data |
-|`/todo` | DELETE | Delete todo | Headers : JWT, Body : Body : todo_id | response_code |
+|`/todo` | POST | Create a todo | Headers : JWT, Body : todo_data | response_code |
+|`/todo/:todo_id` | GET | Get user todo | Headers : JWT, Params : todo_id | todo_data |
+|`/todo/:todo_id` | PUT | Edit todo data | Headers : JWT, Params : todo_id, Body : todo_data | new_todo_data |
+|`/todo/:todo_id` | DELETE | Delete todo | Headers : JWT, Params : todo_id | response_code |
 |`/todo/list` | GET | Get user todo list | Headers : JWT | todo_list |
+|`/todo/list/priority?` | GET | Get user todo list | Headers : JWT, Query : priority_level  | todo_list (by priority) |
+|`/todo/:todo_id/done` | PUT | Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
+|`/todo/:todo_id/undone` | PUT | Undo Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
 
 # 
 
 ## Install Project
-using terminal :
+Using terminal :
 ```diff
 1. npm install
 ```
@@ -45,7 +62,7 @@ using terminal :
 # 
 
 ## Run Application
-using terminal :
+Using terminal :
 ```diff
 nodemon app.js
 ```

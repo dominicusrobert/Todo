@@ -2,6 +2,10 @@
 
 class UserController{
 
+    /**
+     * CRUD Simple
+     */
+    
     static createUser(){
 
     }

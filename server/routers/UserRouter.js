@@ -4,6 +4,7 @@ const UserController = require ('../controllers/UserController.js');
 const router = express.Router();
 
 
+// CRUD Simple
 router.post('/', UserController.createUser);
 router.get('/', UserController.getUserById);
 router.put('/', UserController.editUser);

@@ -1,6 +1,10 @@
 // const TodoModel = require('../models/TodoModel.js');
 
 class TodoController{
+    
+    /**
+     * CRUD Simple
+     */
 
     static createTodo(){
 
@@ -18,7 +22,31 @@ class TodoController{
 
     }
 
+
+
+    /**
+     * List
+     */
+
     static getTodoList(){
+
+    }
+
+    static getTodoListFromPriority(){
+
+    }
+
+
+
+    /**
+     * Mark
+     */
+
+    static markAsDone(){
+
+    }
+
+    static undoMarkAsDone(){
 
     }
 }
