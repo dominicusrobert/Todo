@@ -1,13 +1,13 @@
-# TODO App
+# TODO App (Back-end)
 
-Web application for record and track your todo list
+Web application for record and track your todo list (API)
 
 #
 #
 
 Todo list application using : 
 ```diff
-1. OAuth2 (Login with Facebook)
+1. OAuth (To get data from Facebook token)
 2. JSON Web Token
 3. Mongo DB and Mongoose ODM 
 ```
@@ -39,8 +39,7 @@ Todo list application using :
 ## Install Project
 using terminal :
 ```diff
-1. cd server
-2. npm install
+1. npm install
 ```
 
 # 
