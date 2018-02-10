@@ -51,13 +51,13 @@ Attribute  : name, priority_level, difficulty_level, deadline, status, user_id
 | Route | HTTP | Description | Request | Response |
 |-------|------|-------------|---------|----------|
 |`/todo` | POST | Create a todo | Headers : JWT, Body : todo_data | response_code |
-|`/todo/:todo_id` | GET | Get user todo | Headers : JWT, Params : todo_id | todo_data |
-|`/todo/:todo_id` | PUT | Edit todo data | Headers : JWT, Params : todo_id, Body : todo_data | new_todo_data |
-|`/todo/:todo_id` | DELETE | Delete todo | Headers : JWT, Params : todo_id | response_code |
+|`/todo/id/:todo_id` | GET | Get user todo | Headers : JWT, Params : todo_id | todo_data |
+|`/todo/id/:todo_id` | PUT | Edit todo data | Headers : JWT, Params : todo_id, Body : todo_data | new_todo_data |
+|`/todo/id/:todo_id` | DELETE | Delete todo | Headers : JWT, Params : todo_id | response_code |
 |`/todo/list` | GET | Get user todo list | Headers : JWT | todo_list |
 |`/todo/list/priority?` | GET | Get user todo list | Headers : JWT, Query : priority_level  | todo_list (by priority) |
-|`/todo/:todo_id/done` | PUT | Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
-|`/todo/:todo_id/undone` | PUT | Undo Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
+|`/todo/id/:todo_id/done` | PUT | Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
+|`/todo/id/:todo_id/undone` | PUT | Undo Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
 
 # 
 
