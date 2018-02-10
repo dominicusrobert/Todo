@@ -34,9 +34,8 @@ Attribute  : name, priority_level, difficulty_level, deadline, status
 ### User Routes
 | Route | HTTP | Description | Request | Response |
 |-------|------|-------------|---------|----------|
-|`/user` | POST | Create a user | Body : user_data | JWT |
-|`/user` | GET | Get user data | Body : email, password | JWT | 
-|`/user` | PUT | Edit User data | Headers : JWT, Body : user_data | new_user_data |
+|`/user` | POST | Create / Get a user | Body : user_data | JWT |
+|`/user` | PUT | Edit User data | Headers : JWT, Body : new_user_data | new_user_data |
 |`/user` | DELETE | Delete user | Headers : JWT | response_code |
 
 ### Todo Routes
