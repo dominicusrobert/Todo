@@ -11,6 +11,13 @@ var UserSchema = new Schema(
     }
 );
 
+UserSchema.methods.responseModel = function () {
+    return {
+        id:  this.id,
+        name:  this.name,
+        email:  this.email
+    };
+};
 
 UserSchema.statics.findOneOrCreate = function findOneOrCreate(condition, datauser, callback) {
     const self = this
