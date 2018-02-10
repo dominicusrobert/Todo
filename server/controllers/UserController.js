@@ -24,51 +24,53 @@ class UserController {
                 }
 
                 response.json({
+                    message: 'Success get User Data',
                     token: jwt.sign(
-                        {
-                            id: data.id,
-                            email: data.email
-                        },
+                        data.responseModel(),
                         process.env.SECRET_KEY,
                         { expiresIn: process.env.JWT_EXPIRES_IN }
                     )
                 });
             });
+
     }
 
     static editUser(request, response) {
-        jwt.verify(request.headers.jwt, process.env.SECRET_KEY, function (err, decoded) {
-            UserModel.findOne({ email: decoded.email })
-                .exec()
-                .then(user => {
-                    user.name = request.body.name || user.name;
-            
-                    user.save((err, newValue) => {
-                        if (err) {
-                            response.status(500).json(err);
-                            return;
-                        }
-                        response.json(newValue);
+        UserModel.findOne({ email: response.locals.userEmail })
+            .exec()
+            .then(user => {
+                user.name = request.body.name || user.name;
+
+                user.save((err, newValue) => {
+                    if (err) {
+                        response.status(500).json(err);
+                        return;
+                    }
+
+                    response.json({
+                        message: 'Success Update User Data',
+                        data: newValue.responseModel()
                     });
-                })
-                .catch(err => {
-                    response.status(401).json('Invalid email');
+
                 });
-        });
+            })
+            .catch(err => {
+                response.status(500).json({message : 'Failed to update User'});
+            });
     }
 
     static deleteUser(request, response) {
-        jwt.verify(request.headers.jwt, process.env.SECRET_KEY, function (err, decoded) {
-            UserModel.remove({ email: decoded.email })
-                .exec()
-                .then(data => {
-                    console.log(data)
-                    response.json({ message: 'Success Remove User' });
-                })
-                .catch(err => {
-                    response.status(401).json('Invalid email');
+        UserModel.remove({ email: response.locals.userEmail })
+            .exec()
+            .then(data => {
+                response.json({
+                    message: "Success delete User",
+                    id: data.id
                 });
-        });
+            })
+            .catch(err => {
+                response.status(500).json({message : 'Failed to delete User'});
+            });
     }
 
 }
