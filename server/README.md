@@ -56,8 +56,7 @@ Attribute  : name, priority_level, difficulty_level, deadline, status, user_id
 |`/todo/id/:todo_id` | DELETE | Delete todo | Headers : JWT, Params : todo_id | response_code |
 |`/todo/list` | GET | Get user todo list | Headers : JWT | todo_list |
 |`/todo/list/priority?` | GET | Get user todo list | Headers : JWT, Query : priority_level  | todo_list (by priority) |
-|`/todo/id/:todo_id/done` | PUT | Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
-|`/todo/id/:todo_id/undone` | PUT | Undo Mark as Done todo | Headers : JWT, Params : todo_id | response_code |
+|`/todo/id/:todo_id/mark` | PUT | Mark as Done / Undo mark todo status | Headers : JWT, Params : todo_id | response_code |
 
 # 
 
