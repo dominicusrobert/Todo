@@ -1,4 +1,6 @@
 const TodoModel = require('../models/TodoModel.js');
+const AuthHelper = require('../helpers/AuthHelper.js');
+
 
 class TodoController {
 
@@ -34,13 +36,20 @@ class TodoController {
     static getTodo(request, response) {
         TodoModel.findById(request.params.todo_id)
             .exec()
-            .then(data => {
+            .then(todo => {
+                
+                if(!AuthHelper.Authorization(response, todo.userId)){
+                    response.status(403).json({ message : 'Forbiden'})
+                    return;
+                }
+
                 response.json({
-                    message: 'Success create todo',
-                    data: data.responseModel()
+                    message: 'Success get todo',
+                    todo: todo.responseModel()
                 });
             })
             .catch(err => {
+                console.log(err);
                 response.status(500).json({ message: 'Failed to get Todo' });
             });
     }
@@ -49,6 +58,12 @@ class TodoController {
         TodoModel.findById(request.params.todo_id)
             .exec()
             .then(todo => {
+
+                if(!AuthHelper.Authorization(response, todo.userId)){
+                    response.status(403).json({ message : 'Forbiden'})
+                    return;
+                }
+
                 todo.name = request.body.name || todo.name;
                 todo.priority_level = request.body.priority_level || todo.priority_level;
                 todo.difficulty_level = request.body.difficulty_level || todo.difficulty_level;
@@ -71,14 +86,26 @@ class TodoController {
     }
 
     static deleteTodo(request, response) {
-        TodoModel.findByIdAndRemove(request.params.todo_id, function (err, todo) {
-            
-            response.json({
-                message: "Success delete todo",
-                id: todo._id
+        TodoModel.findById(request.params.todo_id)
+            .exec()
+            .then(todo => {
+                if(!AuthHelper.Authorization(response, todo.userId)){
+                    response.status(403).json({ message : 'Forbiden'})
+                    return;
+                }
+
+                return TodoModel.findByIdAndRemove(request.params.todo_id).exec();
+            })
+            .then(todo => {
+                response.json({
+                    message: "Success delete todo",
+                    id: todo._id
+                });
+            })
+            .catch(err => {
+                response.status(500).json({ message: 'Failed to detele Todo' });
             });
 
-        });
     }
 
 
@@ -135,12 +162,17 @@ class TodoController {
      * Mark
      */
 
-    static markAsDone(request, response) {
+    static markTodo(request, response) {
         TodoModel.findById(request.params.todo_id)
             .exec()
             .then(todo => {
-                todo.status = true;
 
+                if(!AuthHelper.Authorization(response, todo.userId)){
+                    response.status(403).json({ message : 'Forbiden'})
+                    return;
+                }
+
+                todo.status = !todo.status;
                 todo.save((err, newValue) => {
                     if (err) {
                         response.status(500).json({ message: 'Failed to Mark as Done' });
@@ -158,27 +190,6 @@ class TodoController {
             });
     }
 
-    static undoMarkAsDone(request, response) {
-        TodoModel.findById(request.params.todo_id)
-            .exec()
-            .then(todo => {
-                todo.status = false;
-
-                todo.save((err, newValue) => {
-                    if (err) {
-                        response.status(500).json({ message: 'Failed to Mark as undone' });
-                        return;
-                    }
-                    response.json({
-                        message: 'Success to Mark as undone',
-                        data: newValue.responseModel()
-                    });
-                });
-            })
-            .catch(err => {
-                response.status(500).json({ message: 'Failed to Mark as undone' });
-            });
-    }
 }
 
 module.exports = TodoController;
