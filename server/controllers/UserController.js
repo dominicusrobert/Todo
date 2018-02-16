@@ -55,7 +55,7 @@ class UserController {
                 });
         
                 UserModel.findOneOrCreate(
-                    { email: request.body.email },
+                    { email: userResponse.email },
                     user,
                     function (err, data) {
                         if (err) {
