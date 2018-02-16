@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Facebook Login</title>
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <nav class="navbar  is-link" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item">
+                    Todo Application
+                </a>
+            </div>
+
+            <div class="item-navbar">
+                <fb:login-button id="login-fb" scope="public_profile,email" onlogin="checkLoginState();"> </fb:login-button>
+            </div>
+        </nav>
+
+        <section class="hero is-info is-large">
+            <div class="hero-body" hidden>
+                <div class="container">
+                    <h1 class="title">
+                        Large title
+                    </h1>
+                    <h2 class="subtitle">
+                        Large subtitle
+                    </h2>
+                </div>
+            </div>
+        </section>
+
+        <div class="columns">
+            <div class="column is-one-third" id="col-tab">
+                <span id="main-title">
+                    <strong>Todo</strong>
+                </span>
+
+                <div class="card" id="card-main">
+                    <dropdown-sort></dropdown-sort>
+                    <todo></todo>
+                </div>
+            </div>
+
+            <div class="column is-one-third" id="col-tab">
+                <span id="main-title">
+                    <strong>In Progress</strong>
+                </span>
+                <div class="card" id="card-main">
+                    <dropdown-sort></dropdown-sort>
+                    <inprogress></inprogress>
+                </div>
+            </div>
+
+            <div class="column is-one-third" id="col-tab">
+                <span id="main-title">
+                    <strong>Done</strong>
+                </span>
+
+                <div class="card" id="card-main">
+                    <dropdown-sort></dropdown-sort>
+                    <done></done>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <template id="dropdown-sort-template">
+        <div class="dropdown" id="dropdown-button">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span>Sort By</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                        Due Date
+                    </a>
+                    <a class="dropdown-item">
+                        Priority
+                    </a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="todo-template">
+        <div class="card" id="card-item">
+            <article class="media" id="card-content">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong>Task Name</strong>
+                            </small>
+                            <br> Description
+                        </p>
+                    </div>
+                </div>
+                <div class="media-right">
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </a>
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item"> Move to Progress</a>
+                <a href="#" class="card-footer-item">Move to Done</a>
+            </footer>
+        </div>
+    </template>
+
+    <template id="inprogress-template">
+        <div class="card" id="card-item">
+            <article class="media" id="card-content">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong>Task Name</strong>
+                            </small>
+                            <br> Description
+                        </p>
+                    </div>
+                </div>
+                <div class="media-right">
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </a>
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item">Move to Todo</a>
+                <a href="#" class="card-footer-item">Move to Done</a>
+            </footer>
+        </div>
+    </template>
+
+    <template id="done-template">
+        <div class="card" id="card-item">
+            <article class="media" id="card-content">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong>Task Name</strong>
+                            </small>
+                            <br> Description
+                        </p>
+                    </div>
+                </div>
+                <div class="media-right">
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </a>
+                            <a class="level-item">
+                                <span class="icon is-small">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item">Move to Todo</a>
+                <a href="#" class="card-footer-item">Move to Progress</a>
+            </footer>
+        </div>
+    </template>
+
+    <script type="text/javascript" src="./assets/js/fb.js"></script>
+    <script type="text/javascript" src="./assets/js/vue.js"></script>
+
+</body>
+
+</html>

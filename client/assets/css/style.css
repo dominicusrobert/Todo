@@ -1,0 +1,40 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#item-navbar{
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin: 12px;
+}
+
+#main-title{
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 20px;
+}
+
+#col-tab{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#card-main{
+    width: 100%;
+}
+
+#card-item{
+    margin : 24px;
+}
+
+#card-content{
+    padding: 24px;
+}
+
+#dropdown-button{
+    margin : 24px;
+}
