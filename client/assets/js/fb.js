@@ -1,21 +1,13 @@
 function sendTokenToServer(token) {
-    console.log('SEND TOKEN TO SERVER')
-    console.log(token)
-    // axios.get(
-    //     'http://localhost:3000/fb/data/',
-    //     {
-    //         headers: {
-    //             access_token : token,
-    //         }
-    //     })
-    //     .then(function (response) {
-    //         console.log('AXIOS response');
-    //         console.log(response.data);
-    //     })
-    //     .catch(function (error) {
-    //         console.log('error');
-    //         console.log(error);
-    //     });
+    axios.post('http://localhost:3000/user/fb', {}, {headers : { fb_token: token }})
+        .then(function (response) {
+            console.log('response1');
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log('error1');
+            console.log(error);
+        });
 }
 
 function statusChangeCallback(response) {
