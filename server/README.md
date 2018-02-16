@@ -1,7 +1,7 @@
 # TODO App (Back-end)
 
 Web application for record and track your todo list (API)
-You also can filter todo list by priority and difficulty
+You also can filter todo list by priority
 
 #
 #
@@ -23,22 +23,21 @@ Collection : User
 Attribute  : name, email, [todo_id]
 
 Collection : Todo 
-Attribute  : name, priority_level, difficulty_level, deadline, status, user_id
+Attribute  : name, priority_level, deadline, status, user_id
 ```
 #
 #
 
 #### Level Category :
-| Name | 1 | 2 | 3 |
-|-------|------|-------------|---------|
-| Priority | High| Medium | Low |
-| Difficulty | Hard | Medium | Easy |
+1. High
+2. Medium 
+3. Low 
 
 
 #### Todo Status :
-1. TODO
-2. PROGRESS
-3. DONE
+- TODO
+- PROGRESS
+- DONE
 
 #
 #

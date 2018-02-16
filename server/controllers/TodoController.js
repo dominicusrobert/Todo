@@ -13,7 +13,6 @@ class TodoController {
         var todo = new TodoModel({
             name: request.body.name,
             priority_level: request.body.priority_level,
-            difficulty_level: request.body.difficulty_level,
             // deadline: request.body.deadline,
             status: "TODO",
             userId: response.locals.userId
@@ -66,7 +65,6 @@ class TodoController {
 
                 todo.name = request.body.name || todo.name;
                 todo.priority_level = request.body.priority_level || todo.priority_level;
-                todo.difficulty_level = request.body.difficulty_level || todo.difficulty_level;
 
                 todo.save((err, newValue) => {
                     if (err) {
