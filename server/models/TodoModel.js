@@ -8,7 +8,7 @@ var TodoSchema = new Schema(
         priority_level: Number,
         difficulty_level: Number,
         // deadline: Date,
-        status: Boolean,
+        status: String,
         userId: { type: Schema.Types.ObjectId, ref: 'User' }
     },
     {

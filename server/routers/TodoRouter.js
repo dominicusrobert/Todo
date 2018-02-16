@@ -16,7 +16,7 @@ router.get('/list', AuthHelper.Authentication, TodoController.getUserTodoList);
 router.get('/list/priority?', AuthHelper.Authentication, TodoController.getTodoListFromPriority);
 
 // Mark
-router.put('/id/:todo_id/mark', AuthHelper.Authentication, TodoController.markTodo);
+router.put('/id/:todo_id/markTodo', AuthHelper.Authentication, TodoController.markTodo);
 
 
 module.exports = router;

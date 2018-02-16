@@ -15,7 +15,7 @@ class TodoController {
             priority_level: request.body.priority_level,
             difficulty_level: request.body.difficulty_level,
             // deadline: request.body.deadline,
-            status: false,
+            status: "TODO",
             userId: response.locals.userId
         });
 
@@ -172,21 +172,21 @@ class TodoController {
                     return;
                 }
 
-                todo.status = !todo.status;
+                todo.status = request.body.status;
                 todo.save((err, newValue) => {
                     if (err) {
-                        response.status(500).json({ message: 'Failed to Mark as Done' });
+                        response.status(500).json({ message: 'Failed to Change todo Status' });
                         return;
                     }
 
                     response.json({
-                        message: 'Success to Mark as Done',
+                        message: 'Success to Change todo Status',
                         data: newValue.responseModel()
                     });
                 });
             })
             .catch(err => {
-                response.status(500).json({ message: 'Failed to Mark as Done' });
+                response.status(500).json({ message: 'Failed to Change todo Status' });
             });
     }
 
