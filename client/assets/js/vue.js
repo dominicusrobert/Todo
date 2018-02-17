@@ -26,7 +26,7 @@ function checkLoginState() {
     });
 }
 
-function getLoginStatus(callback){
+function getLoginStatus(callback) {
     FB.getLoginStatus(function (response) {
         callback(response.status === 'connected');
     });
@@ -66,57 +66,177 @@ Vue.component('dropdown-sort', {
 
 Vue.component('todo', {
     template: `#todo-template`,
-    props: ['todolist'],
+    props: ['jwt', 'todolist', 'edittask'],
     computed: {
         list: function () {
             if (this.todolist.length != 0) {
                 this.todolist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.todolist
+        }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+
+            document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+
+                    for(let index=0; index< this.vueApp.taskList.length; index++){
+                        let object = this.vueApp.taskList[index];
+
+                        if(response.data.data.todo_id == object.todo_id){
+                            this.vueApp.taskList.splice(index, 1, response.data.data);
+                            break;
+                        }
+                    }
+
+                    this.vueApp.closeEditTaskDialog();
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 })
 
 Vue.component('inprogress', {
     template: `#inprogress-template`,
-    props: ['progresslist'],
+    props: ['jwt', 'progresslist', 'edittask'],
     computed: {
         list: function () {
             if (this.progresslist.length != 0) {
                 this.progresslist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.progresslist
+        }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+            
+            document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+            .then(function (response) {
+
+                for(let index=0; index< this.vueApp.taskList.length; index++){
+                    let object = this.vueApp.taskList[index];
+
+                    if(response.data.data.todo_id == object.todo_id){
+                        this.vueApp.taskList.splice(index, 1, response.data.data);
+                        break;
+                    }
+                }
+
+                this.vueApp.closeEditTaskDialog();
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 })
 
 Vue.component('done', {
     template: `#done-template`,
-    props: ['donelist'],
+    props: ['jwt', 'donelist', 'edittask'],
     computed: {
         list: function () {
             if (this.donelist.length != 0) {
                 this.donelist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.donelist
+        }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+            
+            document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+            .then(function (response) {
+
+                for(let index=0; index< this.vueApp.taskList.length; index++){
+                    let object = this.vueApp.taskList[index];
+
+                    if(response.data.data.todo_id == object.todo_id){
+                        this.vueApp.taskList.splice(index, 1, response.data.data);
+                        break;
+                    }
+                }
+
+                this.vueApp.closeEditTaskDialog();
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 })
@@ -128,8 +248,14 @@ var vueApp = new Vue({
         return {
             fb_token: '',
             jwt: '',
-            userList: [],
+            taskList: [],
             newTask: {
+                task_name: '',
+                priority_level: '',
+                due_date: ''
+            },
+            editTask : {
+                todo_id : '',
                 task_name: '',
                 priority_level: '',
                 due_date: ''
@@ -138,17 +264,17 @@ var vueApp = new Vue({
     },
     computed: {
         todoList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "TODO";
             })
         },
         progressList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "PROGRESS";
             })
         },
         doneList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "DONE";
             })
         },
@@ -166,12 +292,6 @@ var vueApp = new Vue({
                 }
             })
         },
-        showAddTaskDialog: function () {
-            document.querySelector('#modal-add-task').classList.add('is-active');
-        },
-        closeAddTaskDialog: function () {
-            document.querySelector('#modal-add-task').classList.remove('is-active');
-        },
         saveNewTask: function () {
             let submitObject = {
                 name: this.newTask.task_name,
@@ -182,7 +302,7 @@ var vueApp = new Vue({
             axios.post(`${HOST}/todo`, submitObject, { headers: { jwt: this.jwt } })
                 .then(function (response) {
                     this.vueApp.newTask = {};
-                    this.vueApp.userList.push(response.data.data);
+                    this.vueApp.taskList.push(response.data.data);
                     this.vueApp.closeAddTaskDialog();
                 })
                 .catch(function (error) {
@@ -195,12 +315,48 @@ var vueApp = new Vue({
             axios.get(`${HOST}/todo/list/`, { headers: { jwt: jwt } })
                 .then(function (response) {
                     response.data.data.forEach(function (object) {
-                        this.vueApp.userList.push(object);
+                        this.vueApp.taskList.push(object);
                     });
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        editUserTask : function(){
+            let editObject = {
+                name: this.editTask.task_name,
+                priority_level: this.editTask.priority_level,
+                deadline: this.editTask.due_date
+            };
+
+            axios.put(`${HOST}/todo/id/${this.editTask.todo_id}`, editObject, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+
+                    for(let index=0; index< this.vueApp.taskList.length; index++){
+                        let object = this.vueApp.taskList[index];
+
+                        if(response.data.data.todo_id == object.todo_id){
+                            this.vueApp.taskList.splice(index, 1, response.data.data);
+                            break;
+                        }
+                    }
+
+                    this.vueApp.closeEditTaskDialog();
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        showAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.add('is-active');
+        },
+        closeAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.remove('is-active');
+        },
+        closeEditTaskDialog: function () {
+            document.querySelector('#modal-edit-task').classList.remove('is-active');
         }
     }
 
