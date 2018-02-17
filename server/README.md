@@ -1,7 +1,7 @@
 # TODO App (Back-end)
 
 Web application for record and track your todo list (API)
-You also can filter todo list by priority and difficulty
+You also can filter todo list by priority
 
 #
 #
@@ -23,17 +23,21 @@ Collection : User
 Attribute  : name, email, [todo_id]
 
 Collection : Todo 
-Attribute  : name, priority_level, difficulty_level, deadline, status, user_id
+Attribute  : name, priority_level, deadline, status, user_id
 ```
 #
 #
 
 #### Level Category :
-| Name | 1 | 2 | 3 |
-|-------|------|-------------|---------|
-| Priority | High| Medium | Low |
-| Difficulty | Hard | Medium | Easy |
+1. High
+2. Medium 
+3. Low 
 
+
+#### Todo Status :
+- TODO
+- PROGRESS
+- DONE
 
 #
 #
@@ -56,7 +60,7 @@ Attribute  : name, priority_level, difficulty_level, deadline, status, user_id
 |`/todo/id/:todo_id` | DELETE | Delete todo | Headers : JWT, Params : todo_id | response_code |
 |`/todo/list` | GET | Get user todo list | Headers : JWT | todo_list |
 |`/todo/list/priority?` | GET | Get user todo list | Headers : JWT, Query : priority_level  | todo_list (by priority) |
-|`/todo/id/:todo_id/mark` | PUT | Mark as Done / Undo mark todo status | Headers : JWT, Params : todo_id | response_code |
+|`/todo/id/:todo_id/markTodo` | PUT | Mark as todo/progress/done status | Headers : JWT, Params : todo_id, body : status | response_code |
 
 # 
 

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Facebook Login</title>
+    <title>Todo Application</title>
     <meta charset="utf-8">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
-<body>
+<body background="/assets/images/background.jpg">
 
     <div id="app">
-        <nav class="navbar  is-link" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-link" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item">
                     Todo Application
@@ -26,7 +26,13 @@
             </div>
 
             <div class="item-navbar">
-                <fb:login-button id="login-fb" scope="public_profile,email" onlogin="checkLoginState();"> </fb:login-button>
+                <div v-if="isLoggedIn">
+                    <a class="button is-link" v-on:click="logoutFB">Log out</a>
+                </div>
+                <div v-else>
+                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button>
+                </div>
             </div>
         </nav>
 
@@ -43,40 +49,104 @@
             </div>
         </section>
 
-        <div class="columns">
+        <div class="columns is-dark" id="main-col">
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>Todo</strong>
+                    <a class="has-text-white is-size-3">
+                        <strong>Todo</strong>
+                    </a>
                 </span>
 
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <todo></todo>
+                    <todo v-bind:todolist="todoList"></todo>
+
+                    <footer class="card-footer is-capitalized" id="card-add">
+                        <a class="card-footer-item has-text-white" v-on:click="showAddTaskDialog">
+                            <strong>Add New Task</strong>
+                        </a>
+                    </footer>
+
                 </div>
             </div>
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>In Progress</strong>
+                    <a class="has-text-white is-size-3">
+                        <strong>In Progress</strong>
+                    </a>
                 </span>
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <inprogress></inprogress>
+                    <inprogress v-bind:progresslist="progressList"></inprogress>
                 </div>
             </div>
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>Done</strong>
+                    <a class="has-text-white is-size-3">
+                        <strong>Done</strong>
+                    </a>
                 </span>
 
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <done></done>
+                    <done v-bind:donelist="doneList"></done>
                 </div>
             </div>
         </div>
 
+        <div class="modal" id="modal-add-task">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Add New Task</p>
+                    <button class="delete" aria-label="close" v-on:click="closeAddTaskDialog"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Task name</label>
+                        <div class="control has-icons-left has-icons-right">
+                            <input class="input" type="email" placeholder="e.g. Final Project" v-model="newTask.task_name">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </div>
+
+                        <br/>
+
+                        <div class="columns">
+                            <div class="column">
+                                <label class="label">Task Priority Level</label>
+                                <div class="select">
+                                    <select v-model="newTask.priority_level">
+                                        <option value="">Select priority level</option>
+                                        <option value="1">High</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label">Due date</label>
+                                <div class="control has-icons-left has-icons-right">
+                                    <input class="input" type="date" placeholder="e.g. Final Project" v-model="newTask.due_date">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" v-on:click="saveNewTask">Add Task</button>
+                </footer>
+            </div>
+        </div>
     </div>
 
     <template id="dropdown-sort-template">
@@ -103,117 +173,188 @@
     </template>
 
     <template id="todo-template">
-        <div class="card" id="card-item">
-            <article class="media" id="card-content">
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>Task Name</strong>
-                            </small>
-                            <br> Description
-                        </p>
-                    </div>
-                </div>
-                <div class="media-right">
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </a>
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-trash"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </article>
+        <div>
+            <div v-for="item in list">
+                <div class="card" id="card-item">
+                    <article class="media" id="card-content">
+                        <div class="media-content">
 
-            <footer class="card-footer">
-                <a href="#" class="card-footer-item"> Move to Progress</a>
-                <a href="#" class="card-footer-item">Move to Done</a>
-            </footer>
+                            <div class="content">
+                                <div class="columns">
+                                    <div class="column is-one-fifth">
+                                        <div v-if="item.priority_level == 1">
+                                            <span class="has-text-danger icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else-if="item.priority_level == 2">
+                                            <span class="has-text-warning icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="has-text-success icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <strong>{{item.todo_name}}</strong>
+                                        <br/>
+                                        <small>deadline : {{item.duedate}} </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media-right">
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    </article>
+
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item">Move to Todo</a>
+                        <a href="#" class="card-footer-item">Move to Done</a>
+                    </footer>
+                </div>
+            </div>
         </div>
     </template>
 
     <template id="inprogress-template">
-        <div class="card" id="card-item">
-            <article class="media" id="card-content">
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>Task Name</strong>
-                            </small>
-                            <br> Description
-                        </p>
-                    </div>
-                </div>
-                <div class="media-right">
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </a>
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-trash"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </article>
+        <div>
+            <div v-for="item in list">
+                <div class="card" id="card-item">
+                    <article class="media" id="card-content">
+                        <div class="media-content">
 
-            <footer class="card-footer">
-                <a href="#" class="card-footer-item">Move to Todo</a>
-                <a href="#" class="card-footer-item">Move to Done</a>
-            </footer>
+                            <div class="content">
+                                <div class="columns">
+                                    <div class="column is-one-fifth">
+                                        <div v-if="item.priority_level == 1">
+                                            <span class="has-text-danger icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else-if="item.priority_level == 2">
+                                            <span class="has-text-warning icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="has-text-success icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <strong>{{item.todo_name}}</strong>
+                                        <br/>
+                                        <small>deadline : {{item.duedate}} </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media-right">
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    </article>
+
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item">Move to Todo</a>
+                        <a href="#" class="card-footer-item">Move to Done</a>
+                    </footer>
+                </div>
+            </div>
         </div>
     </template>
 
     <template id="done-template">
-        <div class="card" id="card-item">
-            <article class="media" id="card-content">
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>Task Name</strong>
-                            </small>
-                            <br> Description
-                        </p>
-                    </div>
-                </div>
-                <div class="media-right">
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </a>
-                            <a class="level-item">
-                                <span class="icon is-small">
-                                    <i class="fas fa-trash"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </article>
+        <div>
+            <div v-for="item in list">
+                <div class="card" id="card-item">
+                    <article class="media" id="card-content">
+                        <div class="media-content">
 
-            <footer class="card-footer">
-                <a href="#" class="card-footer-item">Move to Todo</a>
-                <a href="#" class="card-footer-item">Move to Progress</a>
-            </footer>
+                            <div class="content">
+                                <div class="columns">
+                                    <div class="column is-one-fifth">
+                                        <div v-if="item.priority_level == 1">
+                                            <span class="has-text-danger icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else-if="item.priority_level == 2">
+                                            <span class="has-text-warning icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="has-text-success icon">
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <strong>{{item.todo_name}}</strong>
+                                        <br/>
+                                        <small>deadline : {{item.duedate}} </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media-right">
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a class="level-item">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    </article>
+
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item">Move to Todo</a>
+                        <a href="#" class="card-footer-item">Move to Done</a>
+                    </footer>
+                </div>
+            </div>
         </div>
     </template>
 
-    <script type="text/javascript" src="./assets/js/fb.js"></script>
     <script type="text/javascript" src="./assets/js/vue.js"></script>
 
 </body>
