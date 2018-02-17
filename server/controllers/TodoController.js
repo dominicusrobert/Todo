@@ -13,7 +13,7 @@ class TodoController {
         var todo = new TodoModel({
             name: request.body.name,
             priority_level: request.body.priority_level,
-            // deadline: request.body.deadline,
+            deadline: request.body.deadline,
             status: "TODO",
             userId: response.locals.userId
         });
@@ -48,7 +48,6 @@ class TodoController {
                 });
             })
             .catch(err => {
-                console.log(err);
                 response.status(500).json({ message: 'Failed to get Todo' });
             });
     }
@@ -65,6 +64,7 @@ class TodoController {
 
                 todo.name = request.body.name || todo.name;
                 todo.priority_level = request.body.priority_level || todo.priority_level;
+                todo.deadline = request.body.deadline || todo.deadline;
 
                 todo.save((err, newValue) => {
                     if (err) {

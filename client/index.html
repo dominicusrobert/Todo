@@ -46,7 +46,9 @@
         <div class="columns is-dark" id="main-col">
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <a class="has-text-white is-size-3"><strong>Todo</strong> </a>
+                    <a class="has-text-white is-size-3">
+                        <strong>Todo</strong>
+                    </a>
                 </span>
 
                 <div class="card" id="card-main">
@@ -54,7 +56,9 @@
                     <todo v-bind:todolist="todoList"></todo>
 
                     <footer class="card-footer is-capitalized" id="card-add">
-                        <a class="card-footer-item has-text-white"  v-on:click="showAddTaskDialog"> <strong>Add New Task</strong></a>
+                        <a class="card-footer-item has-text-white" v-on:click="showAddTaskDialog">
+                            <strong>Add New Task</strong>
+                        </a>
                     </footer>
 
                 </div>
@@ -62,7 +66,9 @@
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <a class="has-text-white is-size-3"><strong>In Progress</strong> </a>
+                    <a class="has-text-white is-size-3">
+                        <strong>In Progress</strong>
+                    </a>
                 </span>
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
@@ -72,7 +78,9 @@
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <a class="has-text-white is-size-3"><strong>Done</strong> </a>
+                    <a class="has-text-white is-size-3">
+                        <strong>Done</strong>
+                    </a>
                 </span>
 
                 <div class="card" id="card-main">
@@ -82,6 +90,57 @@
             </div>
         </div>
 
+        <div class="modal" id="modal-add-task">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Add New Task</p>
+                    <button class="delete" aria-label="close" v-on:click="closeAddTaskDialog"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Task name</label>
+                        <div class="control has-icons-left has-icons-right">
+                            <input class="input" type="email" placeholder="e.g. Final Project" v-model="newTask.task_name">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </div>
+
+                        <br/>
+
+                        <div class="columns">
+                            <div class="column">
+                                <label class="label">Task Priority Level</label>
+                                <div class="select">
+                                    <select v-model="newTask.priority_level">
+                                        <option value="">Select priority level</option>
+                                        <option value="1">High</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label">Due date</label>
+                                <div class="control has-icons-left has-icons-right">
+                                    <input class="input" type="date" placeholder="e.g. Final Project" v-model="newTask.due_date">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" v-on:click="saveNewTask">Add Task</button>
+                </footer>
+            </div>
+        </div>
     </div>
 
     <template id="dropdown-sort-template">
@@ -136,7 +195,7 @@
                                     <div class="column">
                                         <strong>{{item.todo_name}}</strong>
                                         <br/>
-                                        <!-- <small> Due Date : 31 Feb 2018 </small> -->
+                                        <small>deadline : {{item.duedate}} </small>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +256,7 @@
                                     <div class="column">
                                         <strong>{{item.todo_name}}</strong>
                                         <br/>
-                                        <!-- <small> Due Date : 31 Feb 2018 </small> -->
+                                        <small>deadline : {{item.duedate}} </small>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +317,7 @@
                                     <div class="column">
                                         <strong>{{item.todo_name}}</strong>
                                         <br/>
-                                        <!-- <small> Due Date : 31 Feb 2018 </small> -->
+                                        <small>deadline : {{item.duedate}} </small>
                                     </div>
                                 </div>
                             </div>

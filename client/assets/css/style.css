@@ -54,3 +54,7 @@ body {
 #dropdown-button{
     margin : 24px;
 }
+
+#todo-template{
+    overflow-y: scroll;
+}

@@ -61,6 +61,15 @@ Vue.component('todo', {
     props: ['todolist'],
     computed: {
         list: function () {
+            if (this.todolist.length != 0) {
+                this.todolist.map(item => {
+                    let deadlineDate = new Date(item.deadline);
+                    let day = deadlineDate.getDate();
+                    let month = deadlineDate.getMonth() + 1;
+                    let year = deadlineDate.getFullYear();
+                    item.duedate = `${day} - ${month} - ${year}`
+                });
+            }
             return this.todolist
         }
     }
@@ -71,6 +80,15 @@ Vue.component('inprogress', {
     props: ['progresslist'],
     computed: {
         list: function () {
+            if (this.progresslist.length != 0) {
+                this.progresslist.map(item => {
+                    let deadlineDate = new Date(item.deadline);
+                    let day = deadlineDate.getDate();
+                    let month = deadlineDate.getMonth() + 1;
+                    let year = deadlineDate.getFullYear();
+                    item.duedate = `${day} - ${month} - ${year}`
+                });
+            }
             return this.progresslist
         }
     }
@@ -81,6 +99,15 @@ Vue.component('done', {
     props: ['donelist'],
     computed: {
         list: function () {
+            if (this.donelist.length != 0) {
+                this.donelist.map(item => {
+                    let deadlineDate = new Date(item.deadline);
+                    let day = deadlineDate.getDate();
+                    let month = deadlineDate.getMonth() + 1;
+                    let year = deadlineDate.getFullYear();
+                    item.duedate = `${day} - ${month} - ${year}`
+                });
+            }
             return this.donelist
         }
     }
@@ -93,7 +120,12 @@ var vueApp = new Vue({
         return {
             fb_token: '',
             jwt: '',
-            userList: []
+            userList: [],
+            newTask: {
+                task_name: '',
+                priority_level: '',
+                due_date: ''
+            }
         }
     },
     created: function () {
@@ -117,8 +149,28 @@ var vueApp = new Vue({
         }
     },
     methods: {
-        showAddTaskDialog: function(){
-            
+        showAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.add('is-active');
+        },
+        closeAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.remove('is-active');
+        },
+        saveNewTask: function () {
+            let submitObject = {
+                name: this.newTask.task_name,
+                priority_level: this.newTask.priority_level,
+                deadline: this.newTask.due_date
+            };
+
+            axios.post(`${HOST}/todo`, submitObject, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.newTask = {};
+                    this.vueApp.userList.push(response.data.data);
+                    this.vueApp.closeAddTaskDialog();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         getUserTodo: function (jwt) {
             this.jwt = jwt;
