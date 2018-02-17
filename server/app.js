@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const cors = require('cors')
 
 const UserRouter = require('./routers/UserRouter.js');
 const TodoRouter = require('./routers/TodoRouter.js');
@@ -13,6 +14,7 @@ const db = mongoose.connection;
 
 dotenv.config();
 
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

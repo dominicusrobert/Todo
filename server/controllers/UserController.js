@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
+const FB = require('fb');
 
 const UserModel = require('../models/UserModel.js');
+
+FB.options({ version: 'v2.8' });
 
 class UserController {
 
@@ -33,6 +36,45 @@ class UserController {
                 });
             });
 
+    }
+
+    static createOrGetUserFromFacebook(request, response) {
+        FB.setAccessToken(request.headers.fb_token);
+        FB.api(
+            `/me`,
+            { fields: ['id', 'name', 'email'] },
+            function (userResponse) {
+                if (!userResponse || userResponse.error) {
+                    response.send(!userResponse ? 'error occurred' : userResponse.error);
+                    return;
+                }
+
+                var user = new UserModel({
+                    name: userResponse.name,
+                    email: userResponse.email
+                });
+        
+                UserModel.findOneOrCreate(
+                    { email: userResponse.email },
+                    user,
+                    function (err, data) {
+                        if (err) {
+                            response.status(500).json(err);
+                            return;
+                        }
+                        
+                        response.json({
+                            message: 'Success get User Data',
+                            token: jwt.sign(
+                                data.responseModel(),
+                                process.env.SECRET_KEY,
+                                { expiresIn: process.env.JWT_EXPIRES_IN }
+                            )
+                        });
+                    }
+                );
+            }
+        );
     }
 
     static editUser(request, response) {

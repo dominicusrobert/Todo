@@ -13,9 +13,8 @@ class TodoController {
         var todo = new TodoModel({
             name: request.body.name,
             priority_level: request.body.priority_level,
-            difficulty_level: request.body.difficulty_level,
-            // deadline: request.body.deadline,
-            status: false,
+            deadline: request.body.deadline,
+            status: "TODO",
             userId: response.locals.userId
         });
 
@@ -49,7 +48,6 @@ class TodoController {
                 });
             })
             .catch(err => {
-                console.log(err);
                 response.status(500).json({ message: 'Failed to get Todo' });
             });
     }
@@ -66,7 +64,7 @@ class TodoController {
 
                 todo.name = request.body.name || todo.name;
                 todo.priority_level = request.body.priority_level || todo.priority_level;
-                todo.difficulty_level = request.body.difficulty_level || todo.difficulty_level;
+                todo.deadline = request.body.deadline || todo.deadline;
 
                 todo.save((err, newValue) => {
                     if (err) {
@@ -172,21 +170,21 @@ class TodoController {
                     return;
                 }
 
-                todo.status = !todo.status;
+                todo.status = request.body.status;
                 todo.save((err, newValue) => {
                     if (err) {
-                        response.status(500).json({ message: 'Failed to Mark as Done' });
+                        response.status(500).json({ message: 'Failed to Change todo Status' });
                         return;
                     }
 
                     response.json({
-                        message: 'Success to Mark as Done',
+                        message: 'Success to Change todo Status',
                         data: newValue.responseModel()
                     });
                 });
             })
             .catch(err => {
-                response.status(500).json({ message: 'Failed to Mark as Done' });
+                response.status(500).json({ message: 'Failed to Change todo Status' });
             });
     }
 

@@ -8,6 +8,7 @@ const router = express.Router();
 
 // CRUD Simple
 router.post('/', UserController.createOrGetUser);
+router.post('/fb', UserController.createOrGetUserFromFacebook);
 router.put('/', AuthHelper.Authentication, UserController.editUser);
 router.delete('/', AuthHelper.Authentication, UserController.deleteUser);
 
