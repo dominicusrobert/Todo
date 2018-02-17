@@ -272,8 +272,8 @@
                     </article>
 
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item">Move to Todo</a>
-                        <a href="#" class="card-footer-item">Move to Done</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'PROGRESS')">Move to Progress</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'DONE')">Move to Done</a>
                     </footer>
                 </div>
             </div>
@@ -333,8 +333,8 @@
                     </article>
 
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item">Move to Todo</a>
-                        <a href="#" class="card-footer-item">Move to Done</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'TODO')">Move to Todo</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'DONE')">Move to Done</a>
                     </footer>
                 </div>
             </div>
@@ -394,8 +394,8 @@
                     </article>
 
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item">Move to Todo</a>
-                        <a href="#" class="card-footer-item">Move to Done</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'TODO')">Move to Todo</a>
+                        <a class="card-footer-item" v-on:click="changeStatus(item.todo_id, 'PROGRESS')">Move to Progress</a>
                     </footer>
                 </div>
             </div>

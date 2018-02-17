@@ -99,6 +99,26 @@ Vue.component('todo', {
             this.edittask.due_date = due_date;
 
             document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+
+                    for(let index=0; index< this.vueApp.taskList.length; index++){
+                        let object = this.vueApp.taskList[index];
+
+                        if(response.data.data.todo_id == object.todo_id){
+                            this.vueApp.taskList.splice(index, 1, response.data.data);
+                            break;
+                        }
+                    }
+
+                    this.vueApp.closeEditTaskDialog();
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 })
@@ -138,6 +158,26 @@ Vue.component('inprogress', {
             this.edittask.due_date = due_date;
             
             document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+            .then(function (response) {
+
+                for(let index=0; index< this.vueApp.taskList.length; index++){
+                    let object = this.vueApp.taskList[index];
+
+                    if(response.data.data.todo_id == object.todo_id){
+                        this.vueApp.taskList.splice(index, 1, response.data.data);
+                        break;
+                    }
+                }
+
+                this.vueApp.closeEditTaskDialog();
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 })
@@ -177,6 +217,26 @@ Vue.component('done', {
             this.edittask.due_date = due_date;
             
             document.querySelector('#modal-edit-task').classList.add('is-active');
+        },
+        changeStatus: function(taskId, status){
+            axios.put(`${HOST}/todo/id/${taskId}/markTodo`, {status : status}, { headers: { jwt: this.jwt } })
+            .then(function (response) {
+
+                for(let index=0; index< this.vueApp.taskList.length; index++){
+                    let object = this.vueApp.taskList[index];
+
+                    if(response.data.data.todo_id == object.todo_id){
+                        this.vueApp.taskList.splice(index, 1, response.data.data);
+                        break;
+                    }
+                }
+
+                this.vueApp.closeEditTaskDialog();
+                
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 })
