@@ -4,6 +4,7 @@ const HOST = 'http://localhost:3000';
  * Facebook
  */
 function sendTokenToServer(token) {
+    vueApp.fb_token = token;
     axios.post(`${HOST}/user/fb`, {}, { headers: { fb_token: token } })
         .then(function (response) {
             vueApp.getUserTodo(response.data.token);
@@ -25,6 +26,12 @@ function checkLoginState() {
     });
 }
 
+function getLoginStatus(callback){
+    FB.getLoginStatus(function (response) {
+        callback(response.status === 'connected');
+    });
+}
+
 window.fbAsyncInit = function () {
     FB.init({
         appId: '377410622722299',
@@ -36,16 +43,17 @@ window.fbAsyncInit = function () {
     FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
     });
-
 };
 
-function facebookInvocationMethod(d, s, id) {
+
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.12&appId=377410622722299&autoLogAppEvents=1';
     fjs.parentNode.insertBefore(js, fjs);
-}
+}(document, 'script', 'facebook-jssdk'));
+
 
 
 /**
@@ -128,9 +136,6 @@ var vueApp = new Vue({
             }
         }
     },
-    created: function () {
-        facebookInvocationMethod(document, 'script', 'facebook-jssdk');
-    },
     computed: {
         todoList: function () {
             return this.userList.filter(obj => {
@@ -146,9 +151,21 @@ var vueApp = new Vue({
             return this.userList.filter(obj => {
                 return obj.status == "DONE";
             })
+        },
+        isLoggedIn: function () {
+            return this.jwt != '';
         }
     },
     methods: {
+        logoutFB: function () {
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    FB.logout(function (response) {
+                        location.reload();
+                    });
+                }
+            })
+        },
         showAddTaskDialog: function () {
             document.querySelector('#modal-add-task').classList.add('is-active');
         },

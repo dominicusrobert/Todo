@@ -26,7 +26,13 @@
             </div>
 
             <div class="item-navbar">
-                <fb:login-button id="login-fb" scope="public_profile,email" onlogin="checkLoginState();"> </fb:login-button>
+                <div v-if="isLoggedIn">
+                    <a class="button is-link" v-on:click="logoutFB">Log out</a>
+                </div>
+                <div v-else>
+                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button>
+                </div>
             </div>
         </nav>
 
