@@ -66,16 +66,12 @@ Vue.component('dropdown-sort', {
 
 Vue.component('todo', {
     template: `#todo-template`,
-    props: ['jwt', 'todolist'],
+    props: ['jwt', 'todolist', 'edittask'],
     computed: {
         list: function () {
             if (this.todolist.length != 0) {
                 this.todolist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.todolist
@@ -95,22 +91,26 @@ Vue.component('todo', {
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+
+            document.querySelector('#modal-edit-task').classList.add('is-active');
         }
     }
 })
 
 Vue.component('inprogress', {
     template: `#inprogress-template`,
-    props: ['jwt', 'progresslist'],
+    props: ['jwt', 'progresslist', 'edittask'],
     computed: {
         list: function () {
             if (this.progresslist.length != 0) {
                 this.progresslist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.progresslist
@@ -130,22 +130,26 @@ Vue.component('inprogress', {
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+            
+            document.querySelector('#modal-edit-task').classList.add('is-active');
         }
     }
 })
 
 Vue.component('done', {
     template: `#done-template`,
-    props: ['jwt', 'donelist'],
+    props: ['jwt', 'donelist', 'edittask'],
     computed: {
         list: function () {
             if (this.donelist.length != 0) {
                 this.donelist.map(item => {
-                    let deadlineDate = new Date(item.deadline);
-                    let day = deadlineDate.getDate();
-                    let month = deadlineDate.getMonth() + 1;
-                    let year = deadlineDate.getFullYear();
-                    item.duedate = `${day} - ${month} - ${year}`
+                    item.duedate = new Date(item.deadline).toISOString().substr(0, 10);
                 });
             }
             return this.donelist
@@ -165,6 +169,14 @@ Vue.component('done', {
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        showEditTaskDialog: function (taskId, name, priority_level, due_date) {
+            this.edittask.todo_id = taskId;
+            this.edittask.task_name = name;
+            this.edittask.priority_level = priority_level;
+            this.edittask.due_date = due_date;
+            
+            document.querySelector('#modal-edit-task').classList.add('is-active');
         }
     }
 })
@@ -178,6 +190,12 @@ var vueApp = new Vue({
             jwt: '',
             taskList: [],
             newTask: {
+                task_name: '',
+                priority_level: '',
+                due_date: ''
+            },
+            editTask : {
+                todo_id : '',
                 task_name: '',
                 priority_level: '',
                 due_date: ''
@@ -214,12 +232,6 @@ var vueApp = new Vue({
                 }
             })
         },
-        showAddTaskDialog: function () {
-            document.querySelector('#modal-add-task').classList.add('is-active');
-        },
-        closeAddTaskDialog: function () {
-            document.querySelector('#modal-add-task').classList.remove('is-active');
-        },
         saveNewTask: function () {
             let submitObject = {
                 name: this.newTask.task_name,
@@ -249,6 +261,42 @@ var vueApp = new Vue({
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        editUserTask : function(){
+            let editObject = {
+                name: this.editTask.task_name,
+                priority_level: this.editTask.priority_level,
+                deadline: this.editTask.due_date
+            };
+
+            axios.put(`${HOST}/todo/id/${this.editTask.todo_id}`, editObject, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+
+                    for(let index=0; index< this.vueApp.taskList.length; index++){
+                        let object = this.vueApp.taskList[index];
+
+                        if(response.data.data.todo_id == object.todo_id){
+                            this.vueApp.taskList.splice(index, 1, response.data.data);
+                            break;
+                        }
+                    }
+
+                    this.vueApp.closeEditTaskDialog();
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        showAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.add('is-active');
+        },
+        closeAddTaskDialog: function () {
+            document.querySelector('#modal-add-task').classList.remove('is-active');
+        },
+        closeEditTaskDialog: function () {
+            document.querySelector('#modal-edit-task').classList.remove('is-active');
         }
     }
 

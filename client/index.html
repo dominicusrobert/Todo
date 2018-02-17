@@ -59,7 +59,7 @@
 
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <todo v-bind:todolist="todoList" v-bind:jwt="jwt"></todo>
+                    <todo v-bind:todolist="todoList" v-bind:jwt="jwt" v-bind:edittask="editTask"></todo>
 
                     <footer class="card-footer is-capitalized" id="card-add">
                         <a class="card-footer-item has-text-white" v-on:click="showAddTaskDialog">
@@ -78,7 +78,7 @@
                 </span>
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <inprogress v-bind:progresslist="progressList"  v-bind:jwt="jwt"></inprogress>
+                    <inprogress v-bind:progresslist="progressList" v-bind:jwt="jwt" v-bind:edittask="editTask"></inprogress>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
 
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
-                    <done v-bind:donelist="doneList"  v-bind:jwt="jwt"></done>
+                    <done v-bind:donelist="doneList" v-bind:jwt="jwt" v-bind:edittask="editTask"></done>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                     <div class="field">
                         <label class="label">Task name</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input" type="email" placeholder="e.g. Final Project" v-model="newTask.task_name">
+                            <input class="input" type="email" placeholder="e.g. Final Project Preparation" v-model="newTask.task_name">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-envelope"></i>
                             </span>
@@ -137,13 +137,60 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button is-success" v-on:click="saveNewTask">Add Task</button>
+                </footer>
+            </div>
+        </div>
+
+        <div class="modal" id="modal-edit-task">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Edit Task</p>
+                    <button class="delete" aria-label="close" v-on:click="closeEditTaskDialog"></button>
+                </header>
+                <section class="modal-card-body">
+
+                    <div class="field">
+                        <label class="label">Task name</label>
+                        <div class="control has-icons-left has-icons-right">
+                            <input class="input" type="email" placeholder="e.g. Final Project Preparation" v-model="editTask.task_name">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </div>
+
+                        <br/>
+
+                        <div class="columns">
+                            <div class="column">
+                                <label class="label">Task Priority Level</label>
+                                <div class="select">
+                                    <select v-model="editTask.priority_level">
+                                        <option value="">Select priority level</option>
+                                        <option value="1">High</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label">Due date</label>
+                                <div class="control has-icons-left has-icons-right">
+                                    <input class="input" type="date" placeholder="e.g. Final Project" v-model="editTask.due_date">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" v-on:click="editUserTask">Save Editted Task</button>
                 </footer>
             </div>
         </div>
@@ -209,7 +256,7 @@
                         <div class="media-right">
                             <nav class="level is-mobile">
                                 <div class="level-left">
-                                    <a class="level-item">
+                                    <a class="level-item" v-on:click="showEditTaskDialog(item.todo_id, item.todo_name, item.priority_level, item.duedate)">
                                         <span class="icon is-small">
                                             <i class="fas fa-edit"></i>
                                         </span>
@@ -270,7 +317,7 @@
                         <div class="media-right">
                             <nav class="level is-mobile">
                                 <div class="level-left">
-                                    <a class="level-item">
+                                    <a class="level-item" v-on:click="showEditTaskDialog(item.todo_id, item.todo_name, item.priority_level, item.duedate)">
                                         <span class="icon is-small">
                                             <i class="fas fa-edit"></i>
                                         </span>
@@ -331,7 +378,7 @@
                         <div class="media-right">
                             <nav class="level is-mobile">
                                 <div class="level-left">
-                                    <a class="level-item">
+                                    <a class="level-item" v-on:click="showEditTaskDialog(item.todo_id, item.todo_name, item.priority_level, item.duedate)">
                                         <span class="icon is-small">
                                             <i class="fas fa-edit"></i>
                                         </span>
