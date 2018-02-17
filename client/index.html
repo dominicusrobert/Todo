@@ -58,7 +58,14 @@
                 </span>
 
                 <div class="card" id="card-main">
-                    <dropdown-sort></dropdown-sort>
+                    <div class="select" id="dropdown-button">
+                        <select v-model="todoSortby">
+                            <option value="">Sort By</option>
+                            <option value="deadline">Due Date</option>
+                            <option value="priority_level">Priority</option>
+                        </select>
+                    </div>
+                            
                     <todo v-bind:todolist="todoList" v-bind:jwt="jwt" v-bind:edittask="editTask"></todo>
 
                     <footer class="card-footer is-capitalized" id="card-add">
@@ -77,7 +84,13 @@
                     </a>
                 </span>
                 <div class="card" id="card-main">
-                    <dropdown-sort></dropdown-sort>
+                    <div class="select" id="dropdown-button">
+                        <select v-model="progressSortby">
+                            <option value="">Sort By</option>
+                            <option value="deadline">Due Date</option>
+                            <option value="priority_level">Priority</option>
+                        </select>
+                    </div>
                     <inprogress v-bind:progresslist="progressList" v-bind:jwt="jwt" v-bind:edittask="editTask"></inprogress>
                 </div>
             </div>
@@ -90,7 +103,13 @@
                 </span>
 
                 <div class="card" id="card-main">
-                    <dropdown-sort></dropdown-sort>
+                    <div class="select" id="dropdown-button">
+                        <select v-model="doneSortby">
+                            <option value="">Sort By</option>
+                            <option value="deadline">Due Date</option>
+                            <option value="priority_level">Priority</option>
+                        </select>
+                    </div>
                     <done v-bind:donelist="doneList" v-bind:jwt="jwt" v-bind:edittask="editTask"></done>
                 </div>
             </div>
@@ -196,28 +215,6 @@
         </div>
     </div>
 
-    <template id="dropdown-sort-template">
-        <div class="dropdown" id="dropdown-button">
-            <div class="dropdown-trigger">
-                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                    <span>Sort By</span>
-                    <span class="icon is-small">
-                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                    <a href="#" class="dropdown-item">
-                        Due Date
-                    </a>
-                    <a class="dropdown-item">
-                        Priority
-                    </a>
-                </div>
-            </div>
-        </div>
-    </template>
 
     <template id="todo-template">
         <div>
