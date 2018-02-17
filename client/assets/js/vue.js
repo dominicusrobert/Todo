@@ -57,33 +57,74 @@ Vue.component('dropdown-sort', {
 })
 
 Vue.component('todo', {
-    template: `#todo-template`
+    template: `#todo-template`,
+    props: ['todolist'],
+    computed: {
+        list: function () {
+            return this.todolist
+        }
+    }
 })
 
 Vue.component('inprogress', {
-    template: `#inprogress-template`
+    template: `#inprogress-template`,
+    props: ['progresslist'],
+    computed: {
+        list: function () {
+            return this.progresslist
+        }
+    }
 })
 
 Vue.component('done', {
-    template: `#done-template`
+    template: `#done-template`,
+    props: ['donelist'],
+    computed: {
+        list: function () {
+            return this.donelist
+        }
+    }
 })
 
 
 var vueApp = new Vue({
     el: '#app',
-    data: {
-        message: 'Hello Vue!',
-        fb_token: '',
-        jwt: ''
+    data: function () {
+        return {
+            fb_token: '',
+            jwt: '',
+            userList: []
+        }
     },
     created: function () {
         facebookInvocationMethod(document, 'script', 'facebook-jssdk');
     },
+    computed: {
+        todoList: function () {
+            return this.userList.filter(obj => {
+                return obj.status == "TODO";
+            })
+        },
+        progressList: function () {
+            return this.userList.filter(obj => {
+                return obj.status == "PROGRESS";
+            })
+        },
+        doneList: function () {
+            return this.userList.filter(obj => {
+                return obj.status == "DONE";
+            })
+        }
+    },
     methods: {
         getUserTodo: function (jwt) {
+            this.jwt = jwt;
+
             axios.get(`${HOST}/todo/list/`, { headers: { jwt: jwt } })
                 .then(function (response) {
-                    console.log(response.data);
+                    response.data.data.forEach(function (object) {
+                        this.vueApp.userList.push(object);
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
