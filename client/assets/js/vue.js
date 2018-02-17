@@ -26,7 +26,7 @@ function checkLoginState() {
     });
 }
 
-function getLoginStatus(callback){
+function getLoginStatus(callback) {
     FB.getLoginStatus(function (response) {
         callback(response.status === 'connected');
     });
@@ -66,7 +66,7 @@ Vue.component('dropdown-sort', {
 
 Vue.component('todo', {
     template: `#todo-template`,
-    props: ['todolist'],
+    props: ['jwt', 'todolist'],
     computed: {
         list: function () {
             if (this.todolist.length != 0) {
@@ -80,12 +80,28 @@ Vue.component('todo', {
             }
             return this.todolist
         }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 })
 
 Vue.component('inprogress', {
     template: `#inprogress-template`,
-    props: ['progresslist'],
+    props: ['jwt', 'progresslist'],
     computed: {
         list: function () {
             if (this.progresslist.length != 0) {
@@ -99,12 +115,28 @@ Vue.component('inprogress', {
             }
             return this.progresslist
         }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 })
 
 Vue.component('done', {
     template: `#done-template`,
-    props: ['donelist'],
+    props: ['jwt', 'donelist'],
     computed: {
         list: function () {
             if (this.donelist.length != 0) {
@@ -118,6 +150,22 @@ Vue.component('done', {
             }
             return this.donelist
         }
+    },
+    methods: {
+        deleteTaskChild: function (taskId) {
+            axios.delete(`${HOST}/todo/id/${taskId}`, { headers: { jwt: this.jwt } })
+                .then(function (response) {
+                    this.vueApp.taskList.forEach( function(item, index){
+                        if(item.todo_id == response.data.id){
+                            this.vueApp.taskList.splice(index, 1);
+                            return;
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 })
 
@@ -128,7 +176,7 @@ var vueApp = new Vue({
         return {
             fb_token: '',
             jwt: '',
-            userList: [],
+            taskList: [],
             newTask: {
                 task_name: '',
                 priority_level: '',
@@ -138,17 +186,17 @@ var vueApp = new Vue({
     },
     computed: {
         todoList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "TODO";
             })
         },
         progressList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "PROGRESS";
             })
         },
         doneList: function () {
-            return this.userList.filter(obj => {
+            return this.taskList.filter(obj => {
                 return obj.status == "DONE";
             })
         },
@@ -182,7 +230,7 @@ var vueApp = new Vue({
             axios.post(`${HOST}/todo`, submitObject, { headers: { jwt: this.jwt } })
                 .then(function (response) {
                     this.vueApp.newTask = {};
-                    this.vueApp.userList.push(response.data.data);
+                    this.vueApp.taskList.push(response.data.data);
                     this.vueApp.closeAddTaskDialog();
                 })
                 .catch(function (error) {
@@ -195,7 +243,7 @@ var vueApp = new Vue({
             axios.get(`${HOST}/todo/list/`, { headers: { jwt: jwt } })
                 .then(function (response) {
                     response.data.data.forEach(function (object) {
-                        this.vueApp.userList.push(object);
+                        this.vueApp.taskList.push(object);
                     });
                 })
                 .catch(function (error) {
