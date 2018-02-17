@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
-<body>
+<body background="/assets/images/background.jpg">
 
     <div id="app">
-        <nav class="navbar  is-link" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-link" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item">
                     Todo Application
@@ -43,21 +43,26 @@
             </div>
         </section>
 
-        <div class="columns">
+        <div class="columns is-dark" id="main-col">
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>Todo</strong>
+                    <a class="has-text-white is-size-3"><strong>Todo</strong> </a>
                 </span>
 
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
                     <todo v-bind:todolist="todoList"></todo>
+
+                    <footer class="card-footer is-capitalized" id="card-add">
+                        <a class="card-footer-item has-text-white"  v-on:click="showAddTaskDialog"> <strong>Add New Task</strong></a>
+                    </footer>
+
                 </div>
             </div>
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>In Progress</strong>
+                    <a class="has-text-white is-size-3"><strong>In Progress</strong> </a>
                 </span>
                 <div class="card" id="card-main">
                     <dropdown-sort></dropdown-sort>
@@ -67,7 +72,7 @@
 
             <div class="column is-one-third" id="col-tab">
                 <span id="main-title">
-                    <strong>Done</strong>
+                    <a class="has-text-white is-size-3"><strong>Done</strong> </a>
                 </span>
 
                 <div class="card" id="card-main">

@@ -117,6 +117,9 @@ var vueApp = new Vue({
         }
     },
     methods: {
+        showAddTaskDialog: function(){
+            
+        },
         getUserTodo: function (jwt) {
             this.jwt = jwt;
 
