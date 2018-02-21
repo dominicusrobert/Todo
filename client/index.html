@@ -30,8 +30,10 @@
                     <a class="button is-link" v-on:click="logoutFB">Log out</a>
                 </div>
                 <div v-else>
-                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-                    </fb:login-button>
+                    <a class="button is-link" v-on:click="loginFB">Log in</a>
+
+                    <!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button> -->
                 </div>
             </div>
         </nav>
