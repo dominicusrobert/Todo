@@ -293,6 +293,18 @@ var vueApp = new Vue({
                 return 0;
             }
         },
+        loginFB: function () {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    this.checkLoginState();
+                    // access_token = response.authResponse.accessToken; //get access token
+                    // user_id = response.authResponse.userID; //get FB UID
+                } 
+            }, 
+            {
+                scope: 'public_profile,email'
+            });
+        },
         logoutFB: function () {
             FB.getLoginStatus(function (response) {
                 if (response.status === 'connected') {
